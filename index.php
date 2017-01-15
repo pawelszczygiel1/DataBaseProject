@@ -45,7 +45,7 @@ include ('read_database.php');
                 contentType:"application/json; charset utf-8",
                 dataType:"json",
                 success:function (data) {
-                    console.log(data.length);
+                    console.log(data.length, cid);
                     $.each(data, function (i) {
                         $('#communitySelect').append('<option value="'+ data[i].idCom +'">'+ data[i].community +'</option>');
                     });

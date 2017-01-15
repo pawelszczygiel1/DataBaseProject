@@ -37,8 +37,9 @@ function getCounties($voivodeship, $db) {
 function getCommunities($county, $db) {
     $ret = $db->prepare('SELECT gm.IDGmina, Gmina FROM PowiatGmina as pow join Gmina as gm on 
                          gm.IDGmina = pow.IDGmina WHERE IDPow = :county');
-    $ret->bindParam(':voivodeship', $county, SQLITE3_INTEGER);
+    $ret->bindParam(':county', $county, SQLITE3_INTEGER);
     return $ret->execute();
+
 }
 
 function smallerThanVilliages ($i, $db) {
@@ -87,4 +88,5 @@ function maxinAllFromCountry($db) {
     return $db->query('SELECT max(ifnull(LudnośćMiasto, 0) +  ifnull(LudnośćWieś, 0)) FROM  Gmina');
 }
 
+getCommunities(401, $db);
 ?>

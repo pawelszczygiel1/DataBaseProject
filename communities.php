@@ -1,6 +1,6 @@
 <?php
     include 'read_database.php';
-    $communities = getCommunities($_GET['cid'], $db);
+    $communities = getCommunities($_GET['cid'] , $db);
     $data = array();
     while ($x = $communities->fetchArray()) {
         $data[] = array(
