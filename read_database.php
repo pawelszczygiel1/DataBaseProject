@@ -28,9 +28,16 @@ function getAllVoivedeships($db) {
 }
 
 function getCounties($voivodeship, $db) {
-    $ret = $db->prepare('SELECT DISTINCT Powiat FROM WojewództwoPowiat as woj join PowiatGmina as pow on 
-                         woj.IDPow = pow.IDPow WHERE Województwo = :voivodeship');
-    $ret->bindParam(':voivodeship', $voivodeship, SQLITE3_TEXT);
+    $ret = $db->prepare('SELECT DISTINCT woj.IDPow, Powiat FROM WojewództwoPowiat as woj join PowiatGmina as pow on 
+                         woj.IDPow = pow.IDPow WHERE IDWoj = :voivodeship');
+    $ret->bindParam(':voivodeship', $voivodeship, SQLITE3_INTEGER);
+    return $ret->execute();
+}
+
+function getCommunities($county, $db) {
+    $ret = $db->prepare('SELECT gm.IDGmina, Gmina FROM PowiatGmina as pow join Gmina as gm on 
+                         gm.IDGmina = pow.IDGmina WHERE IDPow = :county');
+    $ret->bindParam(':voivodeship', $county, SQLITE3_INTEGER);
     return $ret->execute();
 }
 

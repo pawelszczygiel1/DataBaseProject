@@ -1,7 +1,13 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: pawel
- * Date: 15.01.17
- * Time: 20:58
- */
+    include 'read_database.php';
+    $communities = getCommunities($_GET['cid'], $db);
+    $data = array();
+    while ($x = $communities->fetchArray()) {
+        $data[] = array(
+            'community' => $x['Gmina'],
+            'idCom' => $x['IDGmina']
+        );
+    }
+    header('Content-type: application/json');
+    echo json_encode($data);
+?>

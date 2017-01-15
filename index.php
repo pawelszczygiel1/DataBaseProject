@@ -1,10 +1,10 @@
 <?php
 include ('read_database.php');
 ?>
-<html>
 <head>
     <script src="jquery-3.1.1.min.js"></script>
     <script type="text/JavaScript">
+        //TODO zmienić id opcji na id w bazie (powtarzające się nazwy powiatów (i być może gmin))
         function Voivodeships() {
             $('#voivodeshipSelect').empty();
             $('#voivodeshipSelect').append("<option>Ładowanie....</option>");
@@ -18,7 +18,7 @@ include ('read_database.php');
                     $('#voivodeshipSelect').empty();
                     $('#voivodeshipSelect').append("<option value='0'>Wybierz województwo</option>");
                     $.each(data, function (i) {
-                        $('#voivodeshipSelect').append('<option value="'+ data[i].voivodeship +'">'+ data[i].voivodeship +'</option>');
+                        $('#voivodeshipSelect').append('<option value="'+ data[i].idWoj +'">'+ data[i].voivodeship +'</option>');
                     });
                 },
                 complete: function () {}
@@ -31,9 +31,8 @@ include ('read_database.php');
                 contentType:"application/json; charset utf-8",
                 dataType:"json",
                 success:function (data) {
-
                     $.each(data, function (i) {
-                        $('#countySelect').append('<option value="'+ data[i].county +'">'+ data[i].county +'</option>');
+                        $('#countySelect').append('<option value="'+ data[i].idPow+'">'+ data[i].county +'</option>');
                     });
                 },
                 complete: function () {}
@@ -46,9 +45,9 @@ include ('read_database.php');
                 contentType:"application/json; charset utf-8",
                 dataType:"json",
                 success:function (data) {
-
+                    console.log(data.length);
                     $.each(data, function (i) {
-                        $('#communitySelect').append('<option value="'+ data[i].community +'">'+ data[i].community +'</option>');
+                        $('#communitySelect').append('<option value="'+ data[i].idCom +'">'+ data[i].community +'</option>');
                     });
                 },
                 complete: function () {}
@@ -60,18 +59,26 @@ include ('read_database.php');
                 $('#countySelect').empty();
                 var voivodeships =  $('#voivodeshipSelect').val();
                 $.each(voivodeships, function (i) {
-                    console.log(voivodeships[i]);
                     Counties(voivodeships[i]);
 
                 });
             });
+            $('#countySelect').change(function () {
+                $('#communitySelect').empty();
+                var counties =  $('#countySelect').val();
+                $.each(counties, function (i) {
+                    Communities(counties[i]);
+
+                });
+            });
+
         });
 
     </script>
 </head>
 <body>
     <span>Województwo</span>
-    <select multiple="multiple" id="voivodeshipSelect"></select>
+    <select multiple="multiple" id="voivodeshipSelect" ></select>
     <span>Powiat</span>
     <select multiple="multiple" id="countySelect"></select>
     <span>Gmina</span>

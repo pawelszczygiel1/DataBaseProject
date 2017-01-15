@@ -4,7 +4,8 @@
     $data = array();
     while ($x = $counties->fetchArray()) {
         $data[] = array(
-            'county' => $x['Powiat']
+            'county' => $x['Powiat'],
+            'idPow' => $x['IDPow']
         );
     }
     header('Content-type: application/json');
