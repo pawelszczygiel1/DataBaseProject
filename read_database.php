@@ -1,5 +1,5 @@
 <?php
-
+$db = new SQLite3('ludność.db');
 function biggerThanCities ($i, $db) {
     $ret = $db->prepare('SELECT * from Gmina WHERE LudnośćMiasto > :i');
     $ret->bindParam(':i', $i, SQLITE3_INTEGER);
@@ -23,7 +23,7 @@ function smallerThanCities ($i, $db) {
 }
 
 function getAllVoivedeships($db) {
-    return $db->query('SELECT DISTINCT Województwo from WojewództwoPowiat');
+    return $db->query('SELECT DISTINCT IDWoj, Województwo from WojewództwoPowiat');
 
 }
 
