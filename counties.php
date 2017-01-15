@@ -1,11 +1,9 @@
 <?php
     include 'read_database.php';
-    $voivodehips = selectAllVoivodeship($_GET["vid"], $db);
+    $counties = getCounties($_GET['vid'], $db);
     $data = array();
-    while ($x = $voivodehips->fetchArray()) {
+    while ($x = $counties->fetchArray()) {
         $data[] = array(
-            'id' => $x['Powiat'],
-            'vid' => $x['Województwo'],
             'county' => $x['Powiat']
         );
     }

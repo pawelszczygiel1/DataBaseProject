@@ -27,6 +27,13 @@ function getAllVoivedeships($db) {
 
 }
 
+function getCounties($voivodeship, $db) {
+    $ret = $db->prepare('SELECT DISTINCT Powiat FROM WojewództwoPowiat as woj join PowiatGmina as pow on 
+                         woj.IDPow = pow.IDPow WHERE Województwo = :voivodeship');
+    $ret->bindParam(':voivodeship', $voivodeship, SQLITE3_TEXT);
+    return $ret->execute();
+}
+
 function smallerThanVilliages ($i, $db) {
     $ret = $db->prepare('SELECT * from Gmina WHERE LudnośćWieś < :i');
     $ret->bindParam(':i', $i, SQLITE3_INTEGER);
