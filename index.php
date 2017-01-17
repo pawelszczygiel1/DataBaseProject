@@ -49,7 +49,6 @@ include ('read_database.php');
                 contentType:"application/json; charset utf-8",
                 dataType:"json",
                 success:function (data) {
-                    console.log(data.length, cid);
                     $.each(data, function (i) {
                         $('#communitySelect').append('<option value="'+ data[i].idCom +'">'+ data[i].community +'</option>');
                     });
@@ -76,6 +75,21 @@ include ('read_database.php');
 
                 });
             });
+            $('#button').click( function () {
+                //TODO tu chcę przesłać wybrane gminy do pliku chart_data.php, który wykonuje zapytanie do bazy i potem odebrać zmienną od niego
+                var communities = $('#communitySelect').val();
+                $.post('chart_data.php', {communities : communities});
+                $.ajax({
+                    type: "POST",
+                    url: "chart_data.php",
+                    dataType: "json",
+                    success: function (data) {
+                        showChart(data);
+                    },
+                    complete: function () {
+                    }
+                });
+            });
 
         });
 
@@ -88,18 +102,11 @@ include ('read_database.php');
     <select multiple="multiple" id="countySelect"></select>
     <span>Gmina</span>
     <select multiple="multiple" id="communitySelect"></select>
-
+    <button id="button" type="button">Wybierz</button>
     <div id="container" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
 
     <script>
-        <?php
-        $woj = selectAllVoivodeship("Podkarpackie", $db);
-        $data = array();
-        while ($x = $woj->fetchArray()) {
-            array_push($data, $x['LudnośćMiasto'] + $x['LudnośćWieś']);
-        }
-        ?>
-        $(function () {
+        function  showChart(data) {
             Highcharts.chart('container', {
                 chart: {
                     type: 'column'
@@ -111,7 +118,7 @@ include ('read_database.php');
                     text: 'źródło danepubliczne.gov.pl'
                 },
                 xAxis: {
-                    categories: [],
+                    categories: [],//nazwy kolejnych gmin
                     crosshair: true
                 },
                 yAxis: {
@@ -123,7 +130,7 @@ include ('read_database.php');
                 tooltip: {
                     headerFormat: '<span style="font-size:10px">{point.key}</span><table>',
                     pointFormat: '<tr><td style="color:{series.color};padding:0">{series.name}: </td>' +
-                    '<td style="padding:0"><b>{point.y:.1f} mm</b></td></tr>',
+                    '<td style="padding:0"><b>{point.y:.1f}</b></td></tr>',
                     footerFormat: '</table>',
                     shared: true,
                     useHTML: true
@@ -137,11 +144,11 @@ include ('read_database.php');
                 series: [{
                     name: 'Tokyo',
                     dataType: "json",
-                    data: <?php echo json_encode($data);?>
+                    data: data//"chart_data.php"
 
                 }]
             });
-        });
+        }
     </script>
 
 

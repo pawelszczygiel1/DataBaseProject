@@ -70,6 +70,12 @@ function selectAllCommunity($community, $db) {
     $ret->bindParam(':community3', $community3, SQLITE3_TEXT);
     return $ret->execute();
 }
+
+function getCommunityPopulation($id, $db) {
+    $ret = $db->prepare('SELECT * FROM  Gmina WHERE IDGmina = :id');
+    $ret->bindParam('id', $id, SQLITE3_INTEGER);
+    return $ret->execute();
+}
 function avgInCityFromCountry($db) {
     return $db->query('SELECT avg(LudnośćMiasto) FROM  Gmina');
 
