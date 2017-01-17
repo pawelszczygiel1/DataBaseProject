@@ -87,6 +87,4 @@ function maxInVillageFromCountry($db) {
 function maxinAllFromCountry($db) {
     return $db->query('SELECT max(ifnull(LudnośćMiasto, 0) +  ifnull(LudnośćWieś, 0)) FROM  Gmina');
 }
-
-getCommunities(401, $db);
 ?>
