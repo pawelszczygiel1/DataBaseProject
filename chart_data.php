@@ -1,17 +1,15 @@
 <?php
     include 'read_database.php';
-    if (isset($_POST['communities'])) {
-                $communities = json_decode($_POST['communities']);
-                $selectedCommunities = array();
-                foreach ($communities as $community) {
-                    $population = getCommunityPopulation($community, $db);
-                    $population = $population->fetchArray();
-                    $selectedCommunities = array(
-                        'population' => $population['LudnośćMiasto'] + $population['LudnośćWieś'],
-                        'name' => $population['Gmina'],
-                        'id' => $population['IDGmina']
-                    );
-                }
-                echo json_encode($selectedCommunities);
-    }
+    $community = json_decode($_GET['communities']);
+    $selectedCommunities = array();
+        $data = getCommunityPopulation($community, $db);
+        $x = $data->fetchArray();
+        $selectedCommunity[] = array(
+            'population' => $x['LudnośćMiasto'] + $x['LudnośćWieś'],
+            'name' => $x['Gmina'],
+            'id' => $x['IDGmina']
+        );
+    header('Content-type: application/json');
+    echo json_encode($selectedCommunity);
+
 ?>

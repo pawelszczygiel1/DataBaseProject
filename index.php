@@ -75,20 +75,35 @@ include ('read_database.php');
 
                 });
             });
-            $('#button').click( function () {
-                //TODO tu chcę przesłać wybrane gminy do pliku chart_data.php, który wykonuje zapytanie do bazy i potem odebrać zmienną od niego
+            $('#button').click(function () {
                 var communities = $('#communitySelect').val();
-                $.post('chart_data.php', {communities : communities});
-                $.ajax({
-                    type: "POST",
-                    url: "chart_data.php",
-                    dataType: "json",
-                    success: function (data) {
-                        showChart(data);
-                    },
-                    complete: function () {
-                    }
-                });
+                var names = [], population = [];
+                $.when($.ajax($.each(communities, function (i) {
+                    $.ajax({
+                        type: "POST",
+                        url: "chart_data.php?communities=" + communities[i],
+                        data: JSON.stringify(communities[i]),
+                        success: function (selectedCommunity) {
+                            names.push(selectedCommunity[0].name);
+                            console.log(names);
+                            population.push(selectedCommunity[0].population);
+                        },
+                        dataType: "json"
+                    });
+                })).then(function () {
+                    console.log(names);
+                    showChart(population, names); //TODO zrobić tak, żeby to wywoływało się po pętli wyżej
+                })
+                );
+
+//                $.post('chart_data.php', {communities : communities},
+//                function (selectedCommunities) {
+//                    console.log(selectedCommunities);
+////                    var population = selectedCommunities;
+////                    var names = selectedCommunities;
+////                    showChart(population, names);
+//                }, "json");
+
             });
 
         });
@@ -106,7 +121,7 @@ include ('read_database.php');
     <div id="container" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
 
     <script>
-        function  showChart(data) {
+        function  showChart(population, names) {
             Highcharts.chart('container', {
                 chart: {
                     type: 'column'
@@ -118,7 +133,7 @@ include ('read_database.php');
                     text: 'źródło danepubliczne.gov.pl'
                 },
                 xAxis: {
-                    categories: [],//nazwy kolejnych gmin
+                    categories: names,//nazwy kolejnych gmin
                     crosshair: true
                 },
                 yAxis: {
@@ -142,9 +157,9 @@ include ('read_database.php');
                     }
                 },
                 series: [{
-                    name: 'Tokyo',
+                    name: '',
                     dataType: "json",
-                    data: data//"chart_data.php"
+                    data: population
 
                 }]
             });

@@ -72,8 +72,9 @@ function selectAllCommunity($community, $db) {
 }
 
 function getCommunityPopulation($id, $db) {
-    $ret = $db->prepare('SELECT * FROM  Gmina WHERE IDGmina = :id');
-    $ret->bindParam('id', $id, SQLITE3_INTEGER);
+    $ret = $db->prepare('SELECT Gmina, IDGmina,ifnull(LudnośćMiasto, 0) as LudnośćMiasto,  ifnull(LudnośćWieś, 0) as LudnośćWieś 
+                      FROM  Gmina WHERE IDGmina  = :id');
+    $ret->bindParam(':id', $id, SQLITE3_INTEGER);
     return $ret->execute();
 }
 function avgInCityFromCountry($db) {
@@ -93,4 +94,21 @@ function maxInVillageFromCountry($db) {
 function maxinAllFromCountry($db) {
     return $db->query('SELECT max(ifnull(LudnośćMiasto, 0) +  ifnull(LudnośćWieś, 0)) FROM  Gmina');
 }
+
+
+//$data = getCommunityPopulation(603032, $db);
+//$x = $data->fetchArray();
+//$selectedCommunities[] = array(
+//    'population' => $x['LudnośćMiasto'] + $x['LudnośćWieś'],
+//    'name' => $x['Gmina'],
+//    'id' => $x['IDGmina']
+//);
+//$data = getCommunityPopulation(223062, $db);
+//$x = $data->fetchArray();
+//$selectedCommunities[] = array(
+//    'population' => $x['LudnośćMiasto'] + $x['LudnośćWieś'],
+//    'name' => $x['Gmina'],
+//    'id' => $x['IDGmina']
+//);
+//echo $selectedCommunities[0]['name'];
 ?>
