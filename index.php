@@ -92,7 +92,7 @@ include ('read_database.php');
                     });
                 })).then(function () {
                     console.log(names);
-                    showChart(population, names); //TODO zrobić tak, żeby to wywoływało się po pętli wyżej
+                    showChart(population, names);
                 })
                 );
 
@@ -157,7 +157,7 @@ include ('read_database.php');
                     }
                 },
                 series: [{
-                    name: '',
+                    name: 'Ludność',
                     dataType: "json",
                     data: population
 
