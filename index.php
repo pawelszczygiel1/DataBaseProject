@@ -77,33 +77,66 @@ include ('read_database.php');
             });
             $('#button').click(function () {
                 var communities = $('#communitySelect').val();
+                var counties = $('#countySelect').val();
+                var voivodeships = $('#voivodeshipSelect').val();
                 var names = [], population = [];
-                $.when($.ajax($.each(communities, function (i) {
-                    $.ajax({
-                        type: "POST",
-                        url: "chart_data.php?communities=" + communities[i],
-                        data: JSON.stringify(communities[i]),
-                        success: function (selectedCommunity) {
-                            names.push(selectedCommunity[0].name);
+                if (communities.length > 0) {
+                    $.when($.ajax($.each(communities, function (i) {
+                            $.ajax({
+                                type: "POST",
+                                url: "chart_data_communities.php?communities=" + communities[i],
+                                data: JSON.stringify(communities[i]),
+                                success: function (selectedCommunity) {
+                                    names.push(selectedCommunity[0].name);
+                                    //console.log(names);
+                                    population.push(selectedCommunity[0].population);
+                                },
+                                dataType: "json"
+                            });
+                        })).then(function () {
                             console.log(names);
-                            population.push(selectedCommunity[0].population);
-                        },
-                        dataType: "json"
-                    });
-                })).then(function () {
-                    console.log(names);
-                    showChart(population, names);
-                })
-                );
-
-//                $.post('chart_data.php', {communities : communities},
-//                function (selectedCommunities) {
-//                    console.log(selectedCommunities);
-////                    var population = selectedCommunities;
-////                    var names = selectedCommunities;
-////                    showChart(population, names);
-//                }, "json");
-
+                            showChart(population, names);
+                        })
+                    );
+                 }
+                 else if (counties.length > 0){
+                    $.when($.ajax($.each(counties, function (i) {
+                            $.ajax({
+                                type: "POST",
+                                url: "chart_data_counties.php?counties=" + counties[i],
+                                data: JSON.stringify(counties[i]),
+                                success: function (selectedCounty) {
+                                    names.push(selectedCounty[0].name);
+                                    console.log(names);
+                                    population.push(selectedCounty[0].population);
+                                },
+                                dataType: "json"
+                            });
+                        })).then(function () {
+                            console.log(names);
+                            showChart(population, names);
+                        })
+                    );
+                }
+                else if (voivodeships.length > 0) {
+                    $.when($.ajax($.each(voivodeships, function (i) {
+                            $.ajax({
+                                type: "POST",
+                                url: "chart_data_voivodeships.php?voivodeship=" + voivodeships[i],
+                                data: JSON.stringify(voivodeships[i]),
+                                success: function (selectedVoivodeship) {
+                                    names.push(selectedVoivodeship[0].name);
+                                    console.log(names);
+                                    population.push(selectedVoivodeship[0].population);
+                                },
+                                dataType: "json"
+                            });
+                        })).then(function () {
+                            console.log(names);
+                            showChart(population, names);
+                        })
+                    );
+                }
             });
 
         });

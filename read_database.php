@@ -24,7 +24,6 @@ function smallerThanCities ($i, $db) {
 
 function getAllVoivedeships($db) {
     return $db->query('SELECT DISTINCT IDWoj, Województwo from WojewództwoPowiat');
-
 }
 
 function getCounties($voivodeship, $db) {
@@ -74,6 +73,21 @@ function selectAllCommunity($community, $db) {
 function getCommunityPopulation($id, $db) {
     $ret = $db->prepare('SELECT Gmina, IDGmina,ifnull(LudnośćMiasto, 0) as LudnośćMiasto,  ifnull(LudnośćWieś, 0) as LudnośćWieś 
                       FROM  Gmina WHERE IDGmina  = :id');
+    $ret->bindParam(':id', $id, SQLITE3_INTEGER);
+    return $ret->execute();
+}
+function getCountyPopulation($id, $db) {
+    $ret = $db->prepare('SELECT Powiat, sum(ifnull(LudnośćMiasto, 0)) + sum(ifnull(LudnośćWieś, 0)) 
+        as Population from PowiatGmina join Gmina on PowiatGmina.IDGmina = Gmina.IDGmina 
+        where IDPow = :id GROUP BY IDPow ');
+    $ret->bindParam(':id', $id, SQLITE3_INTEGER);
+    return $ret->execute();
+}
+
+function getVoivodeshipPopulation($id, $db) {
+    $ret = $db->prepare('SELECT Województwo, sum(ifnull(LudnośćMiasto, 0)) + sum(ifnull(LudnośćWieś, 0)) 
+        as Population from WojewództwoPowiat join PowiatGmina on WojewództwoPowiat.IDPow = PowiatGmina.IDPow join Gmina on PowiatGmina.IDGmina = Gmina.IDGmina 
+        where IDWoj = :id  GROUP BY IDWoj');
     $ret->bindParam(':id', $id, SQLITE3_INTEGER);
     return $ret->execute();
 }
