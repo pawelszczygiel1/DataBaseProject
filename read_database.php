@@ -1,31 +1,9 @@
 <?php
 $db = new SQLite3('ludność.db');
-function biggerThanCities ($i, $db) {
-    $ret = $db->prepare('SELECT * from Gmina WHERE LudnośćMiasto > :i');
-    $ret->bindParam(':i', $i, SQLITE3_INTEGER);
-    return $ret->execute();
-
-}
-
-
-function biggerThanVilliages ($i, $db) {
-    $ret = $db->prepare('SELECT * from Gmina WHERE LudnośćWieś > :i');
-    $ret->bindParam(':i', $i, SQLITE3_INTEGER);
-    return $ret->execute();
-
-}
-
-function smallerThanCities ($i, $db) {
-    $ret = $db->prepare('SELECT * from Gmina WHERE LudnośćMiasto < :i');
-    $ret->bindParam(':i', $i, SQLITE3_INTEGER);
-    return $ret->execute();
-
-}
 
 function getAllVoivedeships($db) {
     return $db->query('SELECT DISTINCT IDWoj, Województwo from WojewództwoPowiat');
 }
-
 function getCounties($voivodeship, $db) {
     $ret = $db->prepare('SELECT DISTINCT woj.IDPow, Powiat FROM WojewództwoPowiat as woj join PowiatGmina as pow on 
                          woj.IDPow = pow.IDPow WHERE IDWoj = :voivodeship');
@@ -77,52 +55,19 @@ function getCommunityPopulation($id, $db) {
     return $ret->execute();
 }
 function getCountyPopulation($id, $db) {
-    $ret = $db->prepare('SELECT Powiat, sum(ifnull(LudnośćMiasto, 0)) + sum(ifnull(LudnośćWieś, 0)) 
-        as Population from PowiatGmina join Gmina on PowiatGmina.IDGmina = Gmina.IDGmina 
+    $ret = $db->prepare('SELECT Powiat, sum(ifnull(LudnośćMiasto, 0)) as LudnośćMiasto ,sum(ifnull(LudnośćWieś, 0)) as LudnośćWieś
+         from PowiatGmina join Gmina on PowiatGmina.IDGmina = Gmina.IDGmina 
         where IDPow = :id GROUP BY IDPow ');
     $ret->bindParam(':id', $id, SQLITE3_INTEGER);
     return $ret->execute();
 }
 
 function getVoivodeshipPopulation($id, $db) {
-    $ret = $db->prepare('SELECT Województwo, sum(ifnull(LudnośćMiasto, 0)) + sum(ifnull(LudnośćWieś, 0)) 
-        as Population from WojewództwoPowiat join PowiatGmina on WojewództwoPowiat.IDPow = PowiatGmina.IDPow join Gmina on PowiatGmina.IDGmina = Gmina.IDGmina 
+    $ret = $db->prepare('SELECT Województwo, sum(ifnull(LudnośćMiasto, 0)) as LudnośćMiasto ,sum(ifnull(LudnośćWieś, 0)) as LudnośćWieś
+        from WojewództwoPowiat join PowiatGmina on WojewództwoPowiat.IDPow = PowiatGmina.IDPow join Gmina on PowiatGmina.IDGmina = Gmina.IDGmina 
         where IDWoj = :id  GROUP BY IDWoj');
     $ret->bindParam(':id', $id, SQLITE3_INTEGER);
     return $ret->execute();
 }
-function avgInCityFromCountry($db) {
-    return $db->query('SELECT avg(LudnośćMiasto) FROM  Gmina');
 
-}
-function avgInVillageFromCountry($db) {
-    return $db->query('SELECT avg(LudnośćWieś) FROM  Gmina');
-
-}
-function maxInCityFromCountry($db) {
-    return $db->query('SELECT max(LudnośćMiasto) FROM  Gmina');
-}
-function maxInVillageFromCountry($db) {
-    return $db->query('SELECT max(LudnośćWieś) FROM  Gmina');
-}
-function maxinAllFromCountry($db) {
-    return $db->query('SELECT max(ifnull(LudnośćMiasto, 0) +  ifnull(LudnośćWieś, 0)) FROM  Gmina');
-}
-
-
-//$data = getCommunityPopulation(603032, $db);
-//$x = $data->fetchArray();
-//$selectedCommunities[] = array(
-//    'population' => $x['LudnośćMiasto'] + $x['LudnośćWieś'],
-//    'name' => $x['Gmina'],
-//    'id' => $x['IDGmina']
-//);
-//$data = getCommunityPopulation(223062, $db);
-//$x = $data->fetchArray();
-//$selectedCommunities[] = array(
-//    'population' => $x['LudnośćMiasto'] + $x['LudnośćWieś'],
-//    'name' => $x['Gmina'],
-//    'id' => $x['IDGmina']
-//);
-//echo $selectedCommunities[0]['name'];
 ?>

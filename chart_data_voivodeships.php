@@ -5,9 +5,12 @@
     $data = getVoivodeshipPopulation($voivodeship, $db);
     $x = $data->fetchArray();
     $selectedVoivodeship[] = array(
-        'population' => $x['Population'],
-        'name' => $x['Województwo']
+        'name' => $x['Województwo'],
+        'generalPopulation' => $x['LudnośćMiasto'] + $x['LudnośćWieś'],
+        'villagesPopulation' => $x['LudnośćWieś'],
+        'citiesPopulation' => $x['LudnośćMiasto']
     );
+
     header('Content-type: application/json');
     echo json_encode($selectedVoivodeship);
 

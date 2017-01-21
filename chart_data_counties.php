@@ -5,8 +5,10 @@
     $data = getCountyPopulation($county, $db);
     $x = $data->fetchArray();
     $selectedCounty[] = array(
-        'population' => $x['Population'],
-        'name' => $x['Powiat']
+        'name' => $x['Powiat'],
+        'generalPopulation' => $x['LudnośćMiasto'] + $x['LudnośćWieś'],
+        'villagesPopulation' => $x['LudnośćWieś'],
+        'citiesPopulation' => $x['LudnośćMiasto']
     );
     header('Content-type: application/json');
     echo json_encode($selectedCounty);
