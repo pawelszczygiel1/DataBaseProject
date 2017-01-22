@@ -146,7 +146,7 @@ include ('read_database.php');
                                 showChartOneSeries(citiesPopulation, "Liczba ludności w miastach", names);
                             }
                             else if (ifVillages == 1) {
-                                showChartOneSeries(villagesPopulation, "Liczba ludności na wsiach", names);
+                                showChartOneSeries(villagesPopulation, "Liczba ludności we wsiach", names);
                             }
                         })
                     );
@@ -200,7 +200,7 @@ include ('read_database.php');
                                 showChartOneSeries(citiesPopulation, "Liczba ludności w miastach", names);
                             }
                             else if (ifVillages == 1) {
-                                showChartOneSeries(villagesPopulation, "Liczba ludności na wsiach", names);
+                                showChartOneSeries(villagesPopulation, "Liczba ludności we wsiach", names);
                             }
                         })
                     );
@@ -250,7 +250,7 @@ include ('read_database.php');
                                 showChartOneSeries(citiesPopulation, "Liczba ludności w miastach", names);
                             }
                             else if (ifVillages == 1) {
-                                showChartOneSeries(villagesPopulation, "Liczba ludności na wsiach", names);
+                                showChartOneSeries(villagesPopulation, "Liczba ludności we wsiach", names);
                             }
                         })
                     );
